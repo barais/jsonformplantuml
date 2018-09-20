@@ -13,11 +13,11 @@ let jsonForm_schema = {
     "metamodel": {
       "type": "object",
       "properties": {
-				"freeText": { "type": "string" },
-			  "diagrams": {
-					"type": "array",
-					"items": { "type": "string" }
-				},
+	"freeText": { "type": "string" },
+	"diagrams": {
+	  "type": "array",
+	  "items": { "type": "string" }
+	},
       },
     },
     "model": {
@@ -28,6 +28,7 @@ let jsonForm_schema = {
       },
     },
     "verification": { "type": "string" },
+    "feedback": { "type": "string" },
   }
 }
 
@@ -36,11 +37,11 @@ let jsonForm_form = {
     { "type": "fieldset",
       "title": "Identification",
       "expandable": true,
-			"htmlClass": "expanded",
+      "htmlClass": "expanded",
       "items": [
         { "key": "user.id",
           //"title": "Respondent identifier:",
-					"notitle": true, "prepend": "Respondent identifier: ",
+	  "notitle": true, "prepend": "Respondent identifier: ",
         },
         { "key": "user.idSrc",
           "readonly": true,
@@ -51,18 +52,18 @@ let jsonForm_form = {
     { "type": "fieldset",
       "title": "Context",
       "expandable": true,
-			"htmlClass": "expanded",
+      "htmlClass": "expanded",
       "items": [
         { "key": "puzzleMode",
           "readonly": true,
-					"type": "hidden"
+	  "type": "hidden"
         },
       ],
     },
     { "type": "fieldset",
       "title": "Meta-Modeling",
       "expandable": true,
-			"htmlClass": "expanded",
+      "htmlClass": "expanded",
       "items": [
         { "type": "help",
           "notitle": true,
@@ -72,20 +73,19 @@ let jsonForm_form = {
           "legend": "Free text",
           "type": "textarea",
           "title": "Free text area",
-				},
-				{
-					"type": "tabarray",
-					"items": [ {
-						"type": "section",
-						"legend": "Diag. {{idx}}",
-						"items": [
-							{	"key": "metamodel.diagrams[]",
-								"type": "textarea",
-                "title": `
-                  <span class="help-block">(Unfocus from the textarea to regenerate the diagram)<br/>(Click on te [+] button below to add a diagram)</span>
-                  <a href='http://plantuml.com'>PlantUML</a> description of the diagram<br/>
-                  `,
-								"value": `
+	},
+	{ "type": "tabarray",
+	  "items": [ {
+	      "type": "section",
+	      "legend": "Diag. {{idx}}",
+	      "items": [
+		  { "key": "metamodel.diagrams[]",
+		    "type": "textarea",
+                    "title": `
+                      <span class="help-block">(Unfocus from the textarea to regenerate the diagram)<br/>(Click on te [+] button below to add a diagram)</span>
+                      <a href='http://plantuml.com'>PlantUML</a> description of the diagram<br/>
+                      `,
+		    "value": `
 note "This is an example" as N1
 class Class1
 class "Another class" as c2
@@ -93,28 +93,28 @@ Class1 <|-- "1..*" c2
 "Yet another" *-- Class4
 c2 "1" --> "0..1" Class4
 N1 .. Class1`,
-								"append": `
-                    <span>
-                      <!-- <label>Generated diagram</label> -->
-                      <div class="center">
-                        <img id="metamodel.diagrams[{{idx}}-1].diag" class="center metamodel-diagram"/>
-                      </div>
-                    </span>
-                  `,
-								onChange: function (evt) {
-									var code = $(evt.target).val();
-									var imgDOM = $(evt.target).next("span").find("img.metamodel-diagram");
-									generatePlantUML(code, imgDOM);
-								}
-							} ]
-					} ]
-				},
-			],
+		    "append": `
+                      <span>
+                        <!-- <label>Generated diagram</label> -->
+                        <div class="center">
+                          <img id="metamodel.diagrams[{{idx}}-1].diag" class="center metamodel-diagram"/>
+                        </div>
+                      </span>
+                      `,
+		    onChange: function (evt) {
+			var code = $(evt.target).val();
+			var imgDOM = $(evt.target).next("span").find("img.metamodel-diagram");
+			generatePlantUML(code, imgDOM);
+		    }
+		  } ]
+	  } ]
+	},
+      ],
     },
     { "type": "fieldset",
       "title": "Modeling",
       "expandable": true,
-			"htmlClass": "expanded",
+      "htmlClass": "expanded",
       "items": [
         { "type": "help",
           "notitle": true,
@@ -122,7 +122,7 @@ N1 .. Class1`,
         },
         { "type": "selectfieldset",
           "title": "Choose answer type: &nbsp;&nbsp;",
-					// "prepend": "Choose answer type:",
+	  // "prepend": "Choose answer type:",
           // "description": "Choose if you want to answer using free text or PlantUML",
           "items": [
             { "key": "model.plantUML",
@@ -131,8 +131,8 @@ N1 .. Class1`,
               "title": `
                 <a href='http://plantuml.com'>PlantUML</a> description of the model<br/>
                 <span class="help-block">(Unfocus to regenerate the diagram)</span>`,
-							// "description": "Unfocus to regenerate the diagram",
-							"value": `
+	      // "description": "Unfocus to regenerate the diagram",
+	      "value": `
 note "This is an example" as N1
 object "An object" as o1
 object "Another object" as o2
@@ -140,7 +140,7 @@ object "Yet another" as o3
 o1 *-- "1..*" o2
 o2 "1" --> "0..1" o3
 N1 .. o1`,
-								"append": `
+	      "append": `
                     <span>
                       <!-- <label>Generated diagram</label> -->
                       <div class="center">
@@ -148,17 +148,17 @@ N1 .. o1`,
                       </div>
                     </span>
                   `,
-							onChange: function (evt) {
-									var code = $(evt.target).val();
-									generatePlantUML(code, $("img[id='model.plantUML.diag']"));
-							}
-						},
+	      onChange: function (evt) {
+		  var code = $(evt.target).val();
+		  generatePlantUML(code, $("img[id='model.plantUML.diag']"));
+	      }
+	    },
             { "key": "model.freeText",
               "legend": "Free text",
               "type": "textarea",
               "title": "Free text description of the model",
               // "description": "Model the example described above."
-						},
+	    },
           ],
         },
       ],
@@ -166,7 +166,7 @@ N1 .. o1`,
     { "type": "fieldset",
       "title": "Verification",
       "expandable": true,
-			"htmlClass": "expanded",
+      "htmlClass": "expanded",
       "items": [
         { "type": "help",
           "notitle": true,
@@ -182,19 +182,35 @@ N1 .. o1`,
     { "type": "fieldset",
       "title": "Additional questions",
       "expandable": true,
-			"htmlClass": "expanded",
+      "htmlClass": "expanded",
       "items": [
         { "key": "user.occupation",
           // "title": "Position",
-					"notitle": true, "prepend": "Position: ",
+	  "notitle": true, "prepend": "Position: ",
           "description": "Current occupation",
-					"fieldHtmlClass": "inline", // Does not work. Can't access the controls div
+	  "fieldHtmlClass": "inline", // Does not work. Can't access the controls div
         },
         { "key": "user.background",
           "type": "textarea",
-          "title": "Background",
+          "title": "Meta-modeling/modeling Background",
           "description": "Education background: modeling/meta-modeling courses taken during “initial” studies, “professionnal” studies, self-taught, ...)"
         },
+      ],
+    },
+    { "type": "fieldset",
+      "title": "Comment on the questionnaire",
+      "expandable": true,
+      // "htmlClass": "expanded",
+      "items": [
+        { "type": "help",
+          "notitle": true,
+          "helpvalue": "If you have any feedback to provide to improve the questionnaire, please provide it in the following box."
+        },
+        { "key": "feedback",
+          "type": "textarea",
+          "title": "Feedback",
+          // "description": ""
+        }
       ],
     },
     { "type": "submit",
