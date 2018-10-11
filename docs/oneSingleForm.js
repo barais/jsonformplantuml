@@ -226,7 +226,7 @@ N1 .. o1`,
         { "key": "user.background",
           "type": "textarea",
           "title": "Meta-modeling/modeling Background",
-          "description": "Education background: modeling/meta-modeling courses taken during “initial” studies, “professional” studies, self-taught, ...)"
+          "description": "Education background: modeling/meta-modeling courses taken during “initial” studies, “professional” studies, self-taught, ..."
         },
       ],
     },
@@ -297,8 +297,11 @@ if ( identificationSct.length ) {
 const contextStc = $("legend:contains('Context')").next("div");
 if ( contextStc.length ) {
   contextStc.prepend(`
-    <p>Let’s a company C be structured in a tree-shaped hierarchical way. For example, the world headquarter (HQ) overlooks the regional HQ, each one of them overlooking country HQ, each one of them overlooking ... This tree shaped hierarchical structure of HQ is of arbitrary width and depth, but not infinite or intractable (data size is not the problem of interest here).</p>
-    <p>Internal deliveries inside this company (that goes only from the top HQ to lower level HQ) is handled by recursive handling of nested packages. A package is addressed to a specific HQ. A package is composed of items and (sub-)packages. At reception of a package P, a HQ is supposed to: forward P to the addressee’s HQ if it is not the addressee itself; or, if it is the addressee, then open the package, keep the items, and iterate on the sub-packages (forward packages addressed to other HQ, and open sub-packages addressed to itself). It is common for a package to contain sub-packages addressed to the same HQ.</p>
+    <p>Let’s a company C be structured in a tree-shaped hierarchical way. For example, the world headquarter (HQ) overlooks the regional HQ, each one of them overlooking country-level HQ, each one of them overlooking ... This tree shaped hierarchical structure of HQ is of arbitrary width and depth, but not infinite or intractable (data size is not the problem of interest here).</p>
+    <p>Internal deliveries inside this company is handled by recursive handling of nested packages. A package is addressed to a specific HQ. A package is composed of items and (sub-)packages. At reception of a package P, a HQ is supposed to:
+ if it is not the addressee of the packet, forward P to the addressee’s HQ;
+ or, if it is the addressee, then open the package, keep the items, and iterate on the sub-packages (forward packages addressed to other HQ, and open sub-packages addressed to itself).
+ It is common for a package to contain sub-packages addressed to the same HQ.</p>
     <p id='last-context-paragraph'>Inside the top-level HQ, a unit A is in charge of packaging while a unit B is in charge of overlooking the delivery process. For every top-level package created, the unit A sends a document to the unit B that describes the structure and destinations of the package. The document does not contain any information about items (they are not the concern of the information exchange). The document describes the tree-shape structure of the package and its sub-packages, and it identifies the destination (a HQ) of every (sub-)package.</p>
   `);
 }
@@ -323,7 +326,7 @@ if ( modelingSct.length ) {
   modelingSct.prepend(`
     <p>Provide the associated model for:
       <ul>
-      <li>a company composed a top-level HQ (HQ1) and single sub-HQ (HQ2) (overall, there are only two HQ: HQ1 and HQ2, which is overlooked by HQ1);</li>
+      <li>a company composed a top-level HQ (HQ1) and a single sub-HQ (HQ2) (overall, there are only two HQ: HQ1 and HQ2, where HQ1 overlooks HQ2);</li>
       <li>a top-level package P1 composed of 2 sub-packages (P11 and P12);</li>
       <li>P1 and P11 are addressed to HQ1, and P12 is addressed to HQ2.</li>
       </ul>
@@ -358,7 +361,7 @@ if (puzzleMode == "") {
 setCookie("puzzleMode", puzzleMode, 30);
 $("input[name='puzzleMode']")[0].value = puzzleMode;
 const verificationIntro = "\
-  <p>Unit B wants to automatically verify a property (Prop) stating that every sub-package (SP) of a package (P) is addressed to the same HQ as its parent package or a sub-HQ of its parent package (P) destination. Meaning that SP is addressed to a HQ that is the same as P’s destination (HQ_p) or that is below HQ_p in the hierarchical structure.</p>\
+  <p>Unit B wants to automatically verify a property (Prop) stating that every sub-package (SP) of a package (P) is addressed to: the same HQ as its parent package; or a sub-HQ of its parent package (P) destination. Meaning that SP is addressed to a HQ that is the same as P’s destination (HQ_p) or that is below HQ_p in the hierarchical structure.</p>\
   <p>Respecting this property is not an obligation for unit A. But if a package does not respect it, this choice should be verified and discussed between units A and B.</p>\
 ";
 if ( puzzleMode == "before" ) {
