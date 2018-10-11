@@ -165,9 +165,8 @@ N1 .. Class1`,
 note "This is an example" as N1
 object "An object" as o1
 object "Another object" as o2
-object "Yet another" as o3
-o1 *-- "1..*" o2
-o2 "1" --> "0..1" o3
+o1 --> o2
+o1 --> "Yet another"
 N1 .. o1`,
 	      "append": `
                     <span>
