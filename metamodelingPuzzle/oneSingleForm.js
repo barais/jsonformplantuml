@@ -102,7 +102,7 @@ let jsonForm_form = {
 		  { "key": "metamodel.diagrams[]",
 		    "type": "textarea",
                     "title": `
-                      <span class="help-block">(Unfocus from, i.e. click outside of, the textarea to regenerate the diagram)<br/>(Click on the [+] button below to add a diagram)</span>
+                      <span class="help-block">(Unfocus from, i.e. click outside of, the textarea to regenerate the diagram after changing its content)<br/>(Click on the [+] button below to add a diagram)</span>
                       <a href='http://plantuml.com'>PlantUML</a> description of the diagram<br/>
                       `,
 		    "value": `
@@ -119,6 +119,11 @@ N1 .. Class1`,
                         <div class="center">
                           <img id="metamodel.diagrams[{{idx}}-1].diag" class="center metamodel-diagram"/>
                         </div>
+                        <script>
+			  var imgDOM = $("img[id='metamodel.diagrams[{{idx}}-1].diag']");
+			  var code = imgDOM.closest("span.input-group-addon").prev("textarea").val();
+			  generatePlantUML(code, imgDOM);
+                        </script>
                       </span>
                       `,
 		    onChange: function (evt) {
@@ -168,6 +173,10 @@ N1 .. o1`,
                       </div>
                     </span>
                   `,
+	      onLoad: function (evt) {
+		  var code = $(evt.target).val();
+		  generatePlantUML(code, $("img[id='model.plantUML.diag']"));
+	      },
 	      onChange: function (evt) {
 		  var code = $(evt.target).val();
 		  generatePlantUML(code, $("img[id='model.plantUML.diag']"));
@@ -297,12 +306,13 @@ if ( metamodelingSct.length ) {
     <p>How would you design the support of this model-based transfer of information (meta-model or something else + any other elements/information needed to use it)?</p>
   `);
 }
-// Adding diagram for model.plantUML
-const metamodelPlantumlTA = $("textarea[name='metamodel.diagrams[0]']");
-if ( metamodelPlantumlTA.length ) {
-    var code = metamodelPlantumlTA[0].value;
-    generatePlantUML(code, $("img.metamodel-diagram:eq(0)"));
-}
+// Supposedly handled by the onLoad event declared in the json form description
+// // Adding diagram for model.plantUML
+// const metamodelPlantumlTA = $("textarea[name='metamodel.diagrams[0]']");
+// if ( metamodelPlantumlTA.length ) {
+//     var code = metamodelPlantumlTA[0].value;
+//     generatePlantUML(code, $("img.metamodel-diagram:eq(0)"));
+// }
 // Modeling text
 const modelingSct = $("legend:contains('Modeling')").filter("legend:not(:contains('Meta'))").next("div");
 if ( modelingSct.length ) {
@@ -316,6 +326,7 @@ if ( modelingSct.length ) {
     </p>
   `); }
 // Adding diagram for model.plantUML
+// Supposedly handled by the onLoad event declared in the json form description but does not work
 const modelPlantumlTA = $("textarea[name='model.plantUML']");
 if ( modelPlantumlTA.length ) {
 	// Added as an append field in the form
