@@ -4,7 +4,7 @@ let jsonForm_schema = {
       "type": "object",
       "properties": {
         "id": { "type": "string" },
-        "idSrc": { "type": "string", "enum": ["random", "coockie", "user"] },
+        "idSrc": { "type": "string", "enum": ["random", "coockie", "URL", "user"] },
         "background": { "type": "string" },
         "occupation": { "type": "string", "enum": ["Academic", "Industry", "Student"] },
       },
@@ -29,11 +29,31 @@ let jsonForm_schema = {
     },
     "verification": { "type": "string" },
     "feedback": { "type": "string" },
+      "timing": {
+	  "type": "object",
+	  "properties": {
+	      "form": {
+		  "type": "object",
+		  "properties": {
+		      "start": { "type": "string" },
+		      "end": { "type": "string" },
+		  },
+	      },
+	  },
+    },
   }
 }
 
 let jsonForm_form = {
   "form": [
+      { "key": "timing.form.start",
+        "readonly": true,
+        "type": "hidden"
+      },
+      { "key": "timing.form.end",
+        "readonly": true,
+        "type": "hidden"
+      },
     { "type": "fieldset",
       "title": "Identification",
       "expandable": true,
@@ -280,8 +300,8 @@ if ( metamodelingSct.length ) {
 // Adding diagram for model.plantUML
 const metamodelPlantumlTA = $("textarea[name='metamodel.diagrams[0]']");
 if ( metamodelPlantumlTA.length ) {
-		var code = metamodelPlantumlTA[0].value;
-		generatePlantUML(code, $("img.metamodel-diagram:eq(0)"));
+    var code = metamodelPlantumlTA[0].value;
+    generatePlantUML(code, $("img.metamodel-diagram:eq(0)"));
 }
 // Modeling text
 const modelingSct = $("legend:contains('Modeling')").filter("legend:not(:contains('Meta'))").next("div");
@@ -307,8 +327,8 @@ if ( modelPlantumlTA.length ) {
   //     </div>
   //   </span>
   // `);
-		var code = modelPlantumlTA[0].value;
-		generatePlantUML(code, $("img[id='model.plantUML.diag']"));
+    var code = modelPlantumlTA[0].value;
+    generatePlantUML(code, $("img[id='model.plantUML.diag']"));
 }
 // Verification text
 var puzzleMode=getCookie("puzzleMode");
@@ -334,14 +354,36 @@ if ( puzzleMode == "before" ) {
   if ( verificationSct.length ) { verificationSct.prepend(verificationIntro); }
 }
 
+// Setting up timing.start value
+$("input[name='timing.form.start']")[0].value = Math.floor(Date.now() / 1000);
+$("form[name='quiz']")[0].addEventListener(
+  "submit",
+  function() {
+      $("input[name='timing.form.end']")[0].value = Math.floor(Date.now() / 1000);
+  },
+    false);
+
 // Setting up identification values
 // id handling logic
+
 var idValue=getCookie("formUserId");
 $("input[name='user.idSrc']")[0].value = "coockie";
-if (idValue == "") {
-  idValue = (Math.random() + 1).toString(36).substring(2, 15);
-  // var uuid = require("uuid"); idValue = uuid.v4();
-  $("input[name='user.idSrc']")[0].value = "random";
+// window.alert("Coockie returned: "+idValue);
+if (idValue == "" || idValue == "undefined") {
+  // Not in coockie, trying to retrieve it from the URL
+    var queryDict = {};
+    location.search.substr(1).split("&").forEach(
+	function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]}
+    );
+    idValue = queryDict['user.id'];
+    // window.alert("URL returned: "+idValue);
+    $("input[name='user.idSrc']")[0].value = "URL";
+    if (idValue == "" || idValue == "undefined") {
+	// Not in coockie or URL, generating a new one
+	// var uuid = require("uuid"); idValue = uuid.v4();
+	idValue = (Math.random() + 1).toString(36).substring(2, 15);
+	$("input[name='user.idSrc']")[0].value = "random";
+    }
 }
 setCookie("formUserId", idValue, 30);
 $("input[name='user.id']")[0].value = idValue;
