@@ -102,7 +102,11 @@ let jsonForm_form = {
 		  { "key": "metamodel.diagrams[]",
 		    "type": "textarea",
                     "title": `
-                      <span class="help-block">(Unfocus from, i.e. click outside of, the textarea to regenerate the diagram after changing its content)<br/>(Click on the [+] button below to add a diagram)</span>
+                      <span class="help-block">
+                        (Unfocus from, i.e. click outside of, the textarea to regenerate the diagram after changing its content)<br/>
+                        (Click on the [+] button below to add a diagram)<br/>
+                        (Click on the [-] button below to DELETE the diagram of the SELECTED tab)
+                      </span>
                       <a href='http://plantuml.com'>PlantUML</a> description of the diagram<br/>
                       `,
 		    "value": `
