@@ -394,20 +394,20 @@ var idValue=getCookie("formUserId");
 $("input[name='user.idSrc']")[0].value = "coockie";
 // window.alert("Coockie returned: "+idValue);
 if (idValue == "" || idValue == "undefined") {
-  // Not in coockie, trying to retrieve it from the URL
-    var queryDict = {};
-    location.search.substr(1).split("&").forEach(
-	function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]}
-    );
-    idValue = queryDict['user.id'];
-    // window.alert("URL returned: "+idValue);
-    $("input[name='user.idSrc']")[0].value = "URL";
-    if (idValue == "" || idValue == "undefined") {
+    // // Not in coockie, trying to retrieve it from the URL
+    // var queryDict = {};
+    // location.search.substr(1).split("&").forEach(
+    // 	function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]}
+    // );
+    // idValue = queryDict['user.id'];
+    // // window.alert("URL returned: "+idValue);
+    // $("input[name='user.idSrc']")[0].value = "URL";
+    // if (idValue == "" || idValue == "undefined") {
 	// Not in coockie or URL, generating a new one
 	// var uuid = require("uuid"); idValue = uuid.v4();
 	idValue = (Math.random() + 1).toString(36).substring(2, 15);
 	$("input[name='user.idSrc']")[0].value = "random";
-    }
+    // }
 }
 setCookie("formUserId", idValue, 30);
 $("input[name='user.id']")[0].value = idValue;
