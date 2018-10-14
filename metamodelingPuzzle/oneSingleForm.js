@@ -103,9 +103,8 @@ let jsonForm_form = {
 		    "type": "textarea",
                     "title": `
                       <span class="help-block">
-                        (Unfocus from, i.e. click outside of, the textarea to regenerate the diagram after changing its content)<br/>
-                        (Click on the [+] button below to add a diagram)<br/>
-                        (Click on the [-] button below to DELETE the SELECTED TAB)
+                    (Unfocus from, i.e. click outside of, the textarea to regenerate the diagram after changing its content. Depending on the security settings of your browser, the diagram update may not work. In that case, you can build the diagram using the <a href='http://plantuml.com/plantuml'>PlantUML website</a> and copy/paste the text source of the diagram in the textarea.)<br/>
+                    (Click on the [+] button below to add a diagram, and on the [-] button below to DELETE the SELECTED TAB)
                       </span>
                       <a href='http://plantuml.com'>PlantUML</a> description of the diagram<br/>
                       `,
@@ -114,7 +113,7 @@ note "This is an example" as N1
 class Class1
 class "Another class" as c2
 Class1 <|-- "1..*" c2
-"Yet another" *-- Class4
+"Yet another" *-- Class4 : rel. name
 c2 "1" --> "0..1" Class4
 N1 .. Class1`,
 		    "append": `
@@ -165,8 +164,9 @@ N1 .. Class1`,
 note "This is an example" as N1
 object "An object" as o1
 object "Another object" as o2
-o1 --> o2
-o1 --> "Yet another"
+object "Yet another" as YetAnother
+o1 --> o2 : Rel
+o1 --> YetAnother : Rel
 N1 .. o1`,
 	      "append": `
                     <span>
@@ -202,7 +202,7 @@ N1 .. o1`,
       "items": [
         { "type": "help",
           "notitle": true,
-          "helpvalue": "How would you verify this property (Prop)? Potentially, but not necessarily, providing OCL expressions."
+          "helpvalue": "How would you verify the property (Prop)? Potentially, but not necessarily, providing OCL expressions or any other appropriate means."
         },
         { "key": "verification",
           "type": "textarea",
@@ -284,6 +284,13 @@ $("select.nav").parent().prev().addClass("inline");
 //$("select[name='user.occupation']").parent().addClass("inline");
 //$("select[name='user.occupation']").parent().prev().addClass("inline");
 
+// Adding introduction
+const container = $("div[class='container']")
+container.prepend(`
+		  <p>The aim of this quiz is to collect data to validate or invalidate a meta-modeling hypothesis (not related to right or wrong).</p>
+    <p>The goal is to design a meta-model (or more generally a "modeling architecture") that could be used as the basis to implement a tool for communication and validation of the containment relationship of (shipping) packets exchanged in a company having a tree-shaped organizational structure.</p>
+`);
+
 // Adding additional text
 // Identification text
 const identificationSct = $("legend:contains('Identification')").next("div");
@@ -296,19 +303,19 @@ if ( identificationSct.length ) {
 const contextStc = $("legend:contains('Context')").next("div");
 if ( contextStc.length ) {
   contextStc.prepend(`
-    <p>Let’s a company C be structured in a tree-shaped hierarchical way. For example, the world headquarter (HQ) overlooks the regional HQ, each one of them overlooking country-level HQ, each one of them overlooking ... This tree shaped hierarchical structure of HQ is of arbitrary width and depth, but not infinite or intractable (data size is not the problem of interest here).</p>
-    <p>Internal deliveries inside this company is handled by recursive handling of nested packages. A package is addressed to a specific HQ. A package is composed of items and (sub-)packages. At reception of a package P, a HQ is supposed to:
- if it is not the addressee of the packet, forward P to the addressee’s HQ;
- or, if it is the addressee, then open the package, keep the items, and iterate on the sub-packages (forward packages addressed to other HQ, and open sub-packages addressed to itself).
- It is common for a package to contain sub-packages addressed to the same HQ.</p>
-    <p id='last-context-paragraph'>Inside the top-level HQ, a unit A is in charge of packaging while a unit B is in charge of overlooking the delivery process. For every top-level package created, the unit A sends a document to the unit B that describes the structure and destinations of the package. The document does not contain any information about items (they are not the concern of the information exchange). The document describes the tree-shape structure of the package and its sub-packages, and it identifies the destination (a HQ) of every (sub-)package.</p>
+    <p>Companies of interest are structured in a tree-shaped hierarchical way. For example, the world headquarter (HQ) overlooks the regional HQ, each one of them overlooking country-level HQ, each one of them overlooking ... This tree shaped hierarchical structure of HQ is of arbitrary width and depth, but not infinite or intractable (data size is not the problem of interest here).</p>
+		     <p>Internal deliveries inside those companies are handled by recursive handling of nested packets or packages. A package is addressed to a specific HQ. A package is composed of: <em>items</em>; and <em>(sub-)packages</em>. At reception of a package P, a HQ is supposed to:
+ <em>if it is not the addressee of the packet</em>, forward P to the addressee HQ;
+ or, <em>if it is the addressee</em>, then open the package, keep the items, and iterate on the sub-packages (forward packages addressed to other HQ, and open sub-packages addressed to itself).
+ <em>It is common for a package to contain sub-packages addressed to the same HQ.</em></p>
+		     <p id='last-context-paragraph'>Inside every HQ, a <em>packaging unit</em> is in charge of packaging; while a <em>logistic management unit</em> is in charge of overlooking the delivery process. For every package created, the packaging unit sends a document to the logistics management unit that describes the containment structure and destinations of the package and sub-packages. The document does not contain any information about items (they are not the concern of the information exchange). The document describes the tree-shape structure of the package and its sub-packages, and it identifies the destination (a HQ) of the top-level package and every (sub-)packages.</p>
   `);
 }
 // Meta-modeling text
 const metamodelingSct = $("legend:contains('Meta-Modeling')").next("div");
 if ( metamodelingSct.length ) {
   metamodelingSct.prepend(`
-    <p>We want to replace this document-based transfer of information between units A and B, by a model-based transfer of information (instead of A sending a textual document to B, A sends a model to B) that would be compatible for any company having a similar tree-shaped structure and using similar delivery system of nested packages.</p>
+    <p>We want to replace this document-based transfer of information between the packaging and logistics management units, by a model-based transfer of information (instead of the packaging unit sending a textual document to the logistics management unit, the packaging unit sends a model to the logistics management unit) that would be compatible for any company having a similar tree-shaped structure and using similar internal delivery system of nested packages.</p>
     <p>How would you design the support of this model-based transfer of information (meta-model or something else + any other elements/information needed to use it)?</p>
   `);
 }
@@ -325,9 +332,9 @@ if ( modelingSct.length ) {
   modelingSct.prepend(`
     <p>Provide the associated model for:
       <ul>
-      <li>a company composed a top-level HQ (HQ1) and a single sub-HQ (HQ2) (overall, there are only two HQ: HQ1 and HQ2, where HQ1 overlooks HQ2);</li>
-      <li>a top-level package P1 composed of 2 sub-packages (P11 and P12);</li>
-      <li>P1 and P11 are addressed to HQ1, and P12 is addressed to HQ2.</li>
+		      <li>A company composed of a top-level HQ (Universe HQ) and a few sub-HQ (Europe HQ, Moon HQ, Mare Cognitum HQ). The Universe HQ, based on Earth, directly overlooks the Europe and Moon HQ; while the Moon HQ directly overlooks the Mare Cognitum HQ</li>
+      <li>A top-level package P1 composed of 2 sub-packages (P11 and P12).</li>
+      <li>P1 and P11 are addressed to the Moon HQ, and P12 is addressed to the Mare Cognitum HQ.</li>
       </ul>
     </p>
   `); }
@@ -360,8 +367,8 @@ if (puzzleMode == "") {
 setCookie("puzzleMode", puzzleMode, 30);
 $("input[name='puzzleMode']")[0].value = puzzleMode;
 const verificationIntro = "\
-  <p>Unit B wants to automatically verify a property (Prop) stating that every sub-package (SP) of a package (P) is addressed to: the same HQ as its parent package; or a sub-HQ of its parent package (P) destination. Meaning that SP is addressed to a HQ that is the same as P’s destination (HQ_p) or that is below HQ_p in the hierarchical structure.</p>\
-  <p>Respecting this property is not an obligation for unit A. But if a package does not respect it, this choice should be verified and discussed between units A and B.</p>\
+  <p>The logistics management unit wants to automatically verify a property (Prop) stating that every sub-package (SP) of a package (P) is addressed to: the same HQ as its parent package; or a descendant HQ of its parent package (P) destination. Meaning that SP is addressed to a HQ that is the same as P’s destination (HQ_p) or that is below HQ_p in the hierarchical structure.</p>\
+  <p>Respecting this property is not an obligation for the packaging unit. But if a package does not respect it, this choice should be verified and discussed between the packaging unit and the logistics management unit.</p>\
 ";
 if ( puzzleMode == "before" ) {
   const lastContextPar = $("p#last-context-paragraph");
